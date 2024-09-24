@@ -23,6 +23,7 @@ class EmployeeFactory extends Factory
             'phone' => $this->faker->phoneNumber,
             'speciality' => $this->faker->jobTitle,
             'address' => $this->faker->address,
+            'time_zone' => $this->faker->timezone,
         ];
     }
 }

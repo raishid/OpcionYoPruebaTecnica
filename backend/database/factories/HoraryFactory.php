@@ -19,7 +19,7 @@ class HoraryFactory extends Factory
     {
         $intervals = $this->_randomHoraryInterval();
 
-        $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
         return [
             'employee_id'   => Employee::factory(),

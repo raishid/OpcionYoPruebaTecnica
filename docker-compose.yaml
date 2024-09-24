@@ -19,7 +19,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: backing-ring-phpmyadmin
+    container_name: phpmyadmin
     restart: unless-stopped
     environment:
       PMA_HOST: db
@@ -32,6 +32,9 @@ services:
       - 3340:80
     depends_on:
       - db
+    env_file:
+      - ./backend/.env
+
 
 volumes:
   db_data:

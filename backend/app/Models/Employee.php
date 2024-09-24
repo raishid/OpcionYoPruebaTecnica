@@ -24,6 +24,7 @@ class Employee extends Model
         'position',
         'salary',
         'status',
+        'time_zone',
     ];
 
     public function horary()

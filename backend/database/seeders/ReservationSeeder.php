@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Employee;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Services\Helpers;
 use Illuminate\Database\Seeder;
+use App\Jobs\ReservationSeedJob;
 
 class ReservationSeeder extends Seeder
 {
@@ -15,6 +16,10 @@ class ReservationSeeder extends Seeder
     {
         $employees = Employee::all();
 
-        $employees->each(function ($employee) {});
+        $nextMonth = now()->addMonth()->firstOfMonth();
+
+        $employees->each(function ($employee) use ($nextMonth) {
+            ReservationSeedJob::dispatch($employee, $nextMonth);
+        });
     }
 }

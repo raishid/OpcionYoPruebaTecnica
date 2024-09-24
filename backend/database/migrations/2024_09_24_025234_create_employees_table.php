@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('speciality');
             $table->text('address');
+            $table->string('time_zone');
             $table->timestamps();
         });
     }

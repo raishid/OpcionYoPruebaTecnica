@@ -9,4 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 class Reservation extends Model
 {
     use HasFactory, HasUuids;
+
+    protected $fillable = [
+        'date',
+    ];
+
+    protected $casts = [
+        'date' => 'datetime',
+    ];
 }
