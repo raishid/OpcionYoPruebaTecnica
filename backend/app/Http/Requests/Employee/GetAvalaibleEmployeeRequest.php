@@ -23,7 +23,7 @@ class GetAvalaibleEmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'time_request'  => ['required', new Timestamp]
+            'time_request'  => ['required', 'date_format:Y-m-d'],
         ];
     }
 }

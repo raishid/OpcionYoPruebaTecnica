@@ -23,8 +23,9 @@ class GetEmployeeAvalaibleIntervalTimeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_time'  => ['required', new Timestamp],
-            'end_time'  => ['required', new Timestamp]
+            'start_time'    => ['required', 'date_format:Y-m-d'],
+            'end_time'      => ['required', 'date_format:Y-m-d'],
+            /* 'timezone'      => ['required', 'timezone'], */
         ];
     }
 }

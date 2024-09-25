@@ -50,17 +50,19 @@ class EmployeeServices
 
   public function mapAvalaibleFromInterval(Collection $employees_reservation_interval_date, CarbonPeriod $periods)
   {
+
     $avalaiblesDaysFromInterval = $employees_reservation_interval_date->map(function (Employee $employee) use ($periods) {
       $avalaible_hoursDay = collect();
-      $reservations = $employee->reservations()->whereBetween('date', [$periods->getStartDate(), $periods->getEndDate()]);
+      $reservations = $employee->reservations()->whereBetween('date', [$periods->getStartDate(), $periods->getEndDate()->endOfDay()]);
 
       foreach ($periods as $date) {
         $reserve_day = $reservations->whereDate('date', $date);
 
         $start = Carbon::parse($employee->horary->start);
         $end = Carbon::parse($employee->horary->end);
-        $lunch_start = Carbon::parse($employee->horary->lunch_start);
-        $lunch_end = Carbon::parse($employee->horary->lunch_end);
+
+        $lunch_start = Carbon::parse($employee->horary->lunch_start, 'UTC');
+        $lunch_end = Carbon::parse($employee->horary->lunch_end, 'UTC');
         $hours = collect();
 
         $perioDay = CarbonPeriod::create($start, '1 hour', $end);
@@ -80,8 +82,7 @@ class EmployeeServices
             ) {
               continue;
             }
-
-            $hours->push($_day->format('H:i'));
+            $hours->push($_day->toISOString());
           }
 
           $avalaible_hoursDay->push([
@@ -94,7 +95,7 @@ class EmployeeServices
               continue;
             }
 
-            $hours->push($_day->format('H:i'));
+            $hours->push($_day->toISOString());
           }
 
           $avalaible_hoursDay->push([

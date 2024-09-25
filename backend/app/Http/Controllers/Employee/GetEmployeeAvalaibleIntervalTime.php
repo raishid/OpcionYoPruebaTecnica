@@ -16,9 +16,11 @@ class GetEmployeeAvalaibleIntervalTime extends Controller
      */
     public function __invoke(GetEmployeeAvalaibleIntervalTimeRequest $request)
     {
+
         $data = $request->validated();
-        $start_time = Carbon::createFromTimestamp($data['start_time']);
-        $end_time = Carbon::createFromTimestamp($data['end_time']);
+
+        $start_time = Carbon::createFromDate($data['start_time']);
+        $end_time = Carbon::createFromDate($data['end_time']);
 
         $employees_reservation_interval_date = Employee::all();
 
