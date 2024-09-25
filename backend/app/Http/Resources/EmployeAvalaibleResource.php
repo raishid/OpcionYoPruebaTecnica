@@ -14,14 +14,22 @@ class EmployeAvalaibleResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'fullname' => $this->name . ' ' . $this->last_name,
             'email' => $this->email,
             'phone' => $this->phone,
             'speciality' => $this->speciality,
             'time_zone' => $this->time_zone,
-            'avalaible_hours' => $this->avalaible_hours,
         ];
+
+        if (isset($this->avalaible_hours)) {
+            $data['avalaible_hours'] = $this->avalaible_hours;
+        }
+
+        if ($this->avalable_horaries) {
+            $data['avalable_horaries'] = $this->avalable_horaries;
+        }
+        return $data;
     }
 }
