@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Horary;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EmployeAvalaibleResource extends JsonResource
+class EmployeeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,22 +15,16 @@ class EmployeAvalaibleResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $data = [
+        return [
             'id' => $this->id,
-            'fullname' => $this->name . ' ' . $this->last_name,
+            'name' => $this->name,
+            'last_name' => $this->last_name,
             'email' => $this->email,
             'phone' => $this->phone,
+            'address' => $this->address,
             'speciality' => $this->speciality,
             'time_zone' => $this->time_zone,
+            'horaries' => HoraryResource::make($this->horary),
         ];
-
-        if (isset($this->avalaible_hour)) {
-            $data['avalaible_hour'] = $this->avalaible_hour;
-        }
-
-        if ($this->avalable_horaries) {
-            $data['avalable_horaries'] = $this->avalable_horaries;
-        }
-        return $data;
     }
 }

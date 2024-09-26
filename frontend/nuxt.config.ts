@@ -13,4 +13,9 @@ export default defineNuxtConfig({
       apiUrl: import.meta.env.NUXT_PUBLIC_API_URL,
     },
   },
+  typescript: {
+    tsConfig: {
+      types: ["vue-sweetalert2"],
+    },
+  },
 });

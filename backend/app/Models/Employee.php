@@ -13,6 +13,7 @@ class Employee extends Model
 
     protected $fillable = [
         'name',
+        'last_name',
         'email',
         'phone',
         'address',
@@ -25,6 +26,7 @@ class Employee extends Model
         'salary',
         'status',
         'time_zone',
+        'speciality',
     ];
 
     public function horary()

@@ -24,11 +24,11 @@ class EmployeeRequest extends FormRequest
 
         $requireds = [
             'name'  => 'required|string',
-            'last_naem' => 'required|string',
+            'last_name' => 'required|string',
             'phone' => 'required|string',
             'address'   => 'required|string',
-            'specialty' => 'required|string',
-            'timezone'  => 'required|timezone',
+            'speciality' => 'required|string',
+            'time_zone'  => 'required|timezone',
             'hour_start'    => 'required|date_format:H:i',
             'hour_end'  => 'required|date_format:H:i',
             'lunch_start'   => 'required|date_format:H:i',

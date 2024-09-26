@@ -1,12 +1,15 @@
 import type { DoctorsAvailableData } from "~/types/Doctors";
-export default (doctors: DoctorsAvailableData[], dateFilter = null) => {
+export default (doctors: DoctorsAvailableData[], dateFilter: Date) => {
   const _horaries = futureHoraries(dateFilter);
 
   return doctors.map((doc) => {
-    const parseAvalaibleHoraries = parseAvalaibleHorariesClientTime(
-      doc.avalable_horaries[0].hours,
-      doc.time_zone
-    );
+    let parseAvalaibleHoraries = [] as string[];
+    if (doc.avalable_horaries && typeof doc.avalable_horaries[0] === "object") {
+      parseAvalaibleHoraries = parseAvalaibleHorariesClientTime(
+        doc.avalable_horaries[0],
+        doc.time_zone
+      );
+    }
 
     const avalaibleHoraries = _horaries.map((hour) => {
       if (parseAvalaibleHoraries.includes(hour)) {
@@ -27,7 +30,7 @@ export default (doctors: DoctorsAvailableData[], dateFilter = null) => {
 
     return {
       ...doc,
-      avalable_horaries: sortedHoraries,
+      parseAvalaibleHoraries: sortedHoraries,
     };
   });
 };

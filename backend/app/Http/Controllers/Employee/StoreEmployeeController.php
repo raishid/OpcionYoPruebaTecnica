@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Employee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Employee\EmployeeRequest;
 use App\Models\Employee;
+use Carbon\Carbon;
 
 class StoreEmployeeController extends Controller
 {
@@ -17,11 +18,23 @@ class StoreEmployeeController extends Controller
 
         $employee = Employee::create($data);
 
+        $parsedHour = Carbon::parse($data['hour_start'], $employee->time_zone);
+        $parsedHour->setTimezone('UTC');
+
+        $parseEndHour = Carbon::parse($data['hour_end'], $employee->time_zone);
+        $parseEndHour->setTimezone('UTC');
+
+        $parseLunchStart = Carbon::parse($data['lunch_start'], $employee->time_zone);
+        $parseLunchStart->setTimezone('UTC');
+
+        $parseLunchEnd = Carbon::parse($data['lunch_end'], $employee->time_zone);
+        $parseLunchEnd->setTimezone('UTC');
+
         $employee->horary()->create([
-            'start' => $data['hour_start'],
-            'end' => $data['hour_end'],
-            'lunch_start' => $data['lunch_start'],
-            'lunch_end' => $data['lunch_end'],
+            'start' => $parsedHour,
+            'end' => $parseEndHour,
+            'lunch_start' => $parseLunchStart,
+            'lunch_end' => $parseLunchEnd,
             'days' => $data['days'],
         ]);
 

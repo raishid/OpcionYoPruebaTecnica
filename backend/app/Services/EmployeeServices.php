@@ -13,33 +13,25 @@ class EmployeeServices
   /*
   @param Collection<int, \App\Models\Employee> $employees
   */
-  public function mapAvalaibleHour(Collection $employees)
+  public function mapAvalaibleHour(Collection $employees, Carbon $time_request)
   {
-    $employees = $employees->map(function (Employee $employee) {
+    $tagetHour = Carbon::parse($time_request->format('H:i'));
+    $tagetHour->minute = 0;
+    $tagetHour->second = 0;
+
+    $employees = $employees->map(function (Employee $employee) use ($tagetHour, $time_request) {
       $start = Carbon::parse($employee->horary->start);
       $end = Carbon::parse($employee->horary->end);
       $lunch_start = Carbon::parse($employee->horary->lunch_start);
       $lunch_end = Carbon::parse($employee->horary->lunch_end);
 
-      $hours = collect();
-      $hour = $start->copy();
-      while ($hour->lessThanOrEqualTo($end)) {
-        if ($hour->between($lunch_start, $lunch_end)) {
-          $hour->addHour();
-          continue;
-        }
-
-        $parsedTimezone = Carbon::parse($hour->format('H:i'), $employee->time_zone);
-
-        $hours->push($parsedTimezone->format('H:i'));
-
-        $hour->addHour();
+      if ($tagetHour->between($start, $end) && !$tagetHour->between($lunch_start, $lunch_end) && $employee->reservations()->where('date', $tagetHour->format('Y-m-d H:i:s'))->get()->isEmpty()) {
+        $employee->avalable_horaries = $tagetHour->toAtomString();
+        return EmployeAvalaibleResource::make($employee);
       }
-
-      $employee->avalaible_hours = $hours;
-
-      return EmployeAvalaibleResource::make($employee);
     });
+
+    $employees = array_values(array_filter($employees->toArray()));
 
     return $employees;
   }
@@ -56,13 +48,18 @@ class EmployeeServices
       $reservations = $employee->reservations()->whereBetween('date', [$periods->getStartDate(), $periods->getEndDate()->endOfDay()]);
 
       foreach ($periods as $date) {
+
+        if (!in_array($date->format('l'), $employee->horary->days)) {
+          continue;
+        }
+
         $reserve_day = $reservations->whereDate('date', $date);
 
         $start = Carbon::parse($employee->horary->start);
         $end = Carbon::parse($employee->horary->end);
 
-        $lunch_start = Carbon::parse($employee->horary->lunch_start, 'UTC');
-        $lunch_end = Carbon::parse($employee->horary->lunch_end, 'UTC');
+        $lunch_start = Carbon::parse($employee->horary->lunch_start);
+        $lunch_end = Carbon::parse($employee->horary->lunch_end);
         $hours = collect();
 
         $perioDay = CarbonPeriod::create($start, '1 hour', $end);
@@ -82,26 +79,22 @@ class EmployeeServices
             ) {
               continue;
             }
-            $hours->push($_day->toISOString());
+            $_day->setDate($date->year, $date->month, $date->day);
+            $hours->push($_day->toAtomString());
           }
 
-          $avalaible_hoursDay->push([
-            'date'  => $date->format('Y-m-d'),
-            'hours' => $hours
-          ]);
+          $avalaible_hoursDay->push($hours);
         } else {
           foreach ($perioDay as $_day) {
             if ($_day->between($lunch_start, $lunch_end)) {
               continue;
             }
 
-            $hours->push($_day->toISOString());
+            $_day->setDate($date->year, $date->month, $date->day);
+            $hours->push($_day->toAtomString());
           }
 
-          $avalaible_hoursDay->push([
-            'date'  => $date->format('Y-m-d'),
-            'hours' => $hours
-          ]);
+          $avalaible_hoursDay->push($hours);
         }
       }
 

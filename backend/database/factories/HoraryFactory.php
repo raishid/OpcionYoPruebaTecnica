@@ -27,7 +27,7 @@ class HoraryFactory extends Factory
             'end'           => $intervals['end'],
             'lunch_start'   => $intervals['lunch_start'],
             'lunch_end'     => $intervals['lunch_end'],
-            'days'          => json_encode($days),
+            'days'          => $days,
         ];
     }
 

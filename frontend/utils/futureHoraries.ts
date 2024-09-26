@@ -1,17 +1,16 @@
-import { parse } from "date-fns";
-export default (dateFilter: null | Date) => {
-  console.log(dateFilter);
+import { parse, format } from "date-fns";
+export default (picker: Date) => {
+  const todayD = format(new Date(), "yyyy-MM-dd");
+  const pickerD = format(picker, "yyyy-MM-dd");
 
-  let picker;
-  if (dateFilter) {
-    picker = dateFilter;
-  } else {
-    picker = new Date();
+  if (pickerD > todayD) {
+    picker.setHours(0, 0, 0, 0);
   }
-  const now = new Date();
+
   const futureHour = horaries().map((hour) => {
-    const hourDate = parse(hour, "HH:mm", now);
-    if (hourDate > hourDate) {
+    const hourDate = parse(hour, "HH:mm", picker);
+
+    if (hourDate > picker) {
       return hour;
     }
   });

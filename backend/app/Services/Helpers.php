@@ -14,7 +14,7 @@ class Helpers
     $end = Carbon::parse($employee->horary->end);
     $lunchStart = Carbon::parse($employee->horary->lunch_start);
     $lunchEnd = Carbon::parse($employee->horary->lunch_end);
-    $days = json_decode($employee->horary->days);
+    $days = $employee->horary->days;
 
     do {
       $randomTime = Carbon::createFromTimestamp(rand($start->timestamp, $end->timestamp));
