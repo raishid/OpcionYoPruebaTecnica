@@ -5,7 +5,6 @@ ARG MYSQL_USER
 
 FROM php:${PHP_VERSION}-fpm
 RUN apt-get update && apt-get install -y \
-git \
 curl \
 libpng-dev \
 libonig-dev \
@@ -14,8 +13,11 @@ zip \
 unzip \
 wget \
 libzip-dev \
+libsodium-dev \
 supervisor \
-pkg-config
+pkg-config \
+&& apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 RUN docker-php-ext-install -j$(nproc) \
 opcache \
@@ -26,7 +28,8 @@ exif \
 pcntl \
 bcmath \
 gd \
-zip
+zip \
+sodium
 
 RUN pecl install apcu-5.1.20 && docker-php-ext-enable apcu
 
