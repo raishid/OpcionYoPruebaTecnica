@@ -116,6 +116,9 @@ class EmployeeServices
     $avalaible = collect();
     $reservers = collect();
     $reservations = $employee->reservations()->whereBetween('date', [$periods->getStartDate(), $periods->getEndDate()->endOfDay()]);
+    $reserve_days = $reservations->pluck('date')->map(function ($item) {
+      return Carbon::parse($item)->toAtomString();
+    });
 
     foreach ($periods as $date) {
 
@@ -123,50 +126,21 @@ class EmployeeServices
         continue;
       }
 
-      $reserve_day = $reservations->whereDate('date', $date);
-
       $start = Carbon::parse($employee->horary->start);
       $end = Carbon::parse($employee->horary->end);
 
-      $lunch_start = Carbon::parse($employee->horary->lunch_start);
-      $lunch_end = Carbon::parse($employee->horary->lunch_end);
-
       $perioDay = CarbonPeriod::create($start, '1 hour', $end);
 
-      if ($reserve_day->count() > 0) {
+      foreach ($perioDay as $_day) {
+        $_day->setDate($date->year, $date->month, $date->day);
 
-        foreach ($perioDay as $_day) {
-          if ($_day->between($lunch_start, $lunch_end)) {
-            continue;
-          }
+        $exist = $reserve_days->filter(function ($item) use ($_day) {
+          return $item == $_day->toAtomString();
+        });
 
-          $_day->setMinute(0);
-          $_day->setSecond(0);
-
-          if (
-            $employee->reservations()
-            ->whereDate('date', $date)
-            ->whereTime('date', $_day->format('H:i:s'))
-            ->count() > 0
-          ) {
-            $_day->setDate($date->year, $date->month, $date->day);
-            $_day->setTimezone('America/New_York');
-            $reservers->push($_day->toAtomString());
-            continue;
-          }
-          $_day->setDate($date->year, $date->month, $date->day);
-          $_day->setTimezone('America/New_York');
-          $_day->setDate($date->year, $date->month, $date->day);
-          $avalaible->push($_day->toAtomString());
-        }
-      } else {
-        foreach ($perioDay as $_day) {
-          if ($_day->between($lunch_start, $lunch_end)) {
-            continue;
-          }
-
-          $_day->setDate($date->year, $date->month, $date->day);
-          $_day->setTimezone('America/New_York');
+        if ($exist->count() > 0) {
+          $reservers->push($_day->toAtomString());
+        } else {
           $avalaible->push($_day->toAtomString());
         }
       }

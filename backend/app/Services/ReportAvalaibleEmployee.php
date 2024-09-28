@@ -61,12 +61,11 @@ class ReportAvalaibleEmployee implements FromCollection, WithHeadings, WithMappi
       $reservations .= Carbon::parse($item)->format('Y-m-d H:i:s') . "\n";
     });
 
-
     return [
       $employee->name,
       $employee->last_name,
       $avalaibleTxt,
-      $reservations,
+      $reservations
     ];
   }
   public function styles(Worksheet $sheet)
