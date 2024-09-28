@@ -14,7 +14,6 @@ zip \
 unzip \
 wget \
 libzip-dev \
-libsodium-dev \
 supervisor \
 pkg-config
 
@@ -27,8 +26,7 @@ exif \
 pcntl \
 bcmath \
 gd \
-zip \
-sodium
+zip
 
 RUN pecl install apcu-5.1.20 && docker-php-ext-enable apcu
 
