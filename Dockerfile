@@ -48,6 +48,9 @@ RUN chown -R www-data:www-data /var/www/html
 WORKDIR /var/www/html/backend
 RUN cp .env.example /var/www/html/backend/.env
 
+RUN chown -R www-data:www-data /var/www/html/backend/storage
+RUN chmod -R 775 /var/www/html/backend/storage
+
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 RUN php artisan migrate --seed --force

@@ -48,6 +48,9 @@ COPY backend /var/www/html/backend
 
 RUN composer install
 
+RUN chown -R www-data:www-data /var/www/html/backend/storage
+RUN chmod -R 775 /var/www/html/backend/storage
+
 ADD supervisor.conf /etc/supervisor/conf.d/worker.conf
 
 CMD ["supervisord"]
