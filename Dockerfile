@@ -48,8 +48,12 @@ RUN chown -R www-data:www-data /var/www/html
 WORKDIR /var/www/html/backend
 RUN cp .env.example /var/www/html/backend/.env
 
+RUN touch /var/www/html/backend/database/laravel.log
+RUN touch /var/www/html/backend/storage/logs/worker.log
 RUN chown -R www-data:www-data /var/www/html/backend/storage
 RUN chmod -R 775 /var/www/html/backend/storage
+RUN chmod 777 /var/www/html/backend/database/laravel.log
+RUN chmod 777 /var/www/html/backend/storage/logs/worker.log
 
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
