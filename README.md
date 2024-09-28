@@ -132,6 +132,9 @@ Aparte de las variable de laravel al final del .env se debe configurar las sigui
 
 `APP_PORT` Puerto de la App frontend
 
+`DB_HOST` Esta al hacer usar docker debe quedar con el valor db ejemplo `DB_HOST=db`
 
+## Demo
 
+https://opcionyo.deladmin.xyz/
 
