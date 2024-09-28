@@ -140,6 +140,9 @@ class EmployeeServices
             continue;
           }
 
+          $_day->setMinute(0);
+          $_day->setSecond(0);
+
           if (
             $employee->reservations()
             ->whereDate('date', $date)
