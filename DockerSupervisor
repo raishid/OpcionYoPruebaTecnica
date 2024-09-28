@@ -15,18 +15,16 @@ unzip \
 wget \
 supervisor
 
-# RUN docker-php-ext-install -j$(nproc) \
-# opcache \
-# intl \
-# pdo_mysql \
-# mbstring \
-# exif \
-# pcntl \
-# bcmath \
-# gd
-# RUN pecl install apcu-5.1.20 && docker-php-ext-enable apcu
-
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets zip sodium
+RUN docker-php-ext-install -j$(nproc) \
+opcache \
+intl \
+pdo_mysql \
+mbstring \
+exif \
+pcntl \
+bcmath \
+gd
+RUN pecl install apcu-5.1.20 && docker-php-ext-enable apcu
 
 COPY docker/php.ini   $PHP_INI_DIR/conf.d/
 RUN curl -sS https://getcomposer.org/installer | \
