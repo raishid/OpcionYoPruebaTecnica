@@ -16,8 +16,7 @@ class GetAvalaibleEmployee extends Controller
     public function __invoke(GetAvalaibleEmployeeRequest $request)
     {
         $data = $request->validated();
-        $time_request = Carbon::createFromTimestamp($data['time_request'], $data['timezone']);
-        $time_request->setTimezone('UTC');
+        $time_request = Carbon::createFromTimestamp($data['time_request']);
 
         $employees = Employee::with('horary')
             ->get()

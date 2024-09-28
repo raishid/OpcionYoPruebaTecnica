@@ -13,7 +13,7 @@
     </div>
     <div class="grid grid-cols-12">
       <div
-        class="flex justify-center mb-4 flex-col items-center gap-2 col-span-6"
+        class="flex justify-center mb-4 flex-col items-center gap-2 col-span-4"
       >
         <h2 class="text-lg font-bold">Buscar por rango de fecha</h2>
 
@@ -28,7 +28,21 @@
         </button>
       </div>
       <div
-        class="flex justify-center mb-4 flex-col items-center gap-2 col-span-6"
+        class="flex justify-center mb-4 flex-col items-center gap-2 col-span-4"
+      >
+        <h2 class="text-lg font-bold">Generar Reporte por rango de fecha</h2>
+        <VDatePicker v-model.range="date3" mode="date" :min-date="today" />
+        <button
+          @click="generateReport"
+          role="button"
+          :disabled="pending"
+          class="px-8 py-4 bg-blue-500 rounded text-white hover:bg-blue-800"
+        >
+          Generar reporte
+        </button>
+      </div>
+      <div
+        class="flex justify-center mb-4 flex-col items-center gap-2 col-span-4"
       >
         <h2 class="text-lg font-bold">Buscar por fecha y hora</h2>
         <VDatePicker
@@ -166,6 +180,7 @@
 <script setup lang="ts">
 import type { DoctorsAvailableData } from "~/types/Doctors";
 import { storeReservations } from "~/services/doctors";
+import { useGetReport } from "~/services/reports";
 import { format } from "date-fns";
 
 const today = new Date();
@@ -180,15 +195,22 @@ const { data } = await useGetDoctos(todayFormated, todayFormated);
 
 const date = ref(today);
 const date2 = ref(today);
+const date3 = ref({
+  start: today,
+  end: today,
+});
 const rules = ref({
   minutes: {
     interval: 60,
   },
 });
 
+const dateSearch = ref() as Ref<Date>;
+
 onMounted(async () => {
   if (data.value) {
     doctors.value = mapAvalaibleDay(data.value, date.value);
+    dateSearch.value = date.value;
   }
 });
 
@@ -206,6 +228,7 @@ const searchAvalaibles = async () => {
   }
   doctors.value = mapAvalaibleDay(data.value, date.value);
   pending.value = false;
+  dateSearch.value = date.value;
 };
 
 const selectedHour = ref({} as { doctor: string; hour: string });
@@ -226,6 +249,32 @@ const searchAvalaiblesOnTime = async () => {
   }
   doctors.value = data.value;
   pending.value = false;
+  dateSearch.value = date2.value;
+};
+
+const generateReport = async () => {
+  const file = await useGetReport(date3.value);
+  if (!file) {
+    return Swal.fire(
+      "Error",
+      "Ocurrio un error al generar el reporte",
+      "error"
+    );
+  }
+
+  const url = window.URL.createObjectURL(new Blob([file]));
+  const link = document.createElement("a");
+  link.href = url;
+  const date = format(date3.value.start, "yyyy-MM-dd");
+  const dateEnd = format(date3.value.end, "yyyy-MM-dd");
+
+  link.setAttribute(
+    "download",
+    `Reporte-disponiblidad-${date}-a-${dateEnd}.xlsx`
+  );
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 const onReserve = async () => {
@@ -243,7 +292,7 @@ const onReserve = async () => {
   if (confirm.isConfirmed) {
     const resp = await storeReservations({
       employee_id: selectedHour.value.doctor,
-      date: date.value,
+      date: dateSearch.value,
       time: selectedHour.value.hour,
     });
     if (resp) {

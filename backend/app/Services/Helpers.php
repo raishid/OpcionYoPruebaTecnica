@@ -21,13 +21,12 @@ class Helpers
       $randomTime->minute = 0;
       $randomTime->second = 0;
       $nameDay = $randomTime->format('l');
+      $newTime = $randomTime->setDate($date->year, $date->month, $date->day);
 
       if (!in_array($nameDay, $days)) {
         continue;
       }
-
-      $newTime = $randomTime->setDate($date->year, $date->month, $date->day);
-    } while (($randomTime->between($lunchStart, $lunchEnd) || $randomTime->isWeekend()) && !self::verifyAvalaibleTime($employee, $newTime));
+    } while (!isset($newTime) || (($randomTime->between($lunchStart, $lunchEnd) || $randomTime->isWeekend()) && !self::verifyAvalaibleTime($employee, $newTime)));
 
     return $newTime;
   }

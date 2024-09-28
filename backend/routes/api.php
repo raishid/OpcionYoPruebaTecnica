@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Employee\GenerateReportExcelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Employee\GetAvalaibleEmployee;
 use App\Http\Controllers\Employee\GetEmployeeController;
@@ -17,3 +18,4 @@ Route::put('/employee/{employee}', UpdateEmployeeController::class)->name('emplo
 
 
 Route::post('/reservations', StoreReservationController::class)->name('reservations.store');
+Route::get('/report-reservations', GenerateReportExcelController::class)->name('report.reservations');

@@ -19,14 +19,14 @@ class StoreReservationController extends Controller
         $employeeId = $request->input('employee_id');
         $timezone = $request->input('timezone');
 
-        $dateParsed = Carbon::parse($date, $timezone)->setTimeFromTimeString($time);
+        $time = Carbon::parse($time);
+
+        $dateParsed = Carbon::parse($date, $timezone)->setHour($time->hour)->setMinute($time->minute);
 
         $employee = Employee::find($employeeId);
 
-        $dateTimeZoneEmploye = $dateParsed->setTimezone('UTC');
-
         $reservation = $employee->reservations()->create([
-            'date' => $dateTimeZoneEmploye,
+            'date' => $dateParsed,
         ]);
 
 

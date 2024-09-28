@@ -21,5 +21,11 @@ class ReservationSeeder extends Seeder
         $employees->each(function ($employee) use ($nextMonth) {
             ReservationSeedJob::dispatch($employee, $nextMonth);
         });
+
+        $twoMonth = now()->addMonths(2)->firstOfMonth();
+
+        $employees->each(function ($employee) use ($twoMonth) {
+            ReservationSeedJob::dispatch($employee, $twoMonth);
+        });
     }
 }
