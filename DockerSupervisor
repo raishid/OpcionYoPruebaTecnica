@@ -14,6 +14,7 @@ zip \
 unzip \
 wget \
 libzip-dev \
+libsodium-dev \
 supervisor
 
 RUN docker-php-ext-install -j$(nproc) \
