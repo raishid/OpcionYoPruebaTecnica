@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     wget
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets zip sodium apcu
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets zip sodium
 
 RUN mkdir -p /var/log/php-fpm/
 
