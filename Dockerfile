@@ -6,9 +6,9 @@ ARG MYSQL_DATABASE
 ARG MYSQL_PASSWORD
 ARG MYSQL_USER
 
-RUN apt-get update && apt-get install -y libzip-dev
+RUN apt-get update && apt-get install -y libzip-dev libsodium-dev
+
 RUN apt-get update && apt-get install -y \
-    git \
     curl \
     libpng-dev \
     libonig-dev \
@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     wget
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets zip sodium
 
