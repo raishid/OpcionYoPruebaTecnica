@@ -6,9 +6,7 @@ map $http_x_forwarded_proto $fastcgi_param_https_variable {
 
 server {
 
-    listen %proxy_port%;
-
-    server_name %domain%;
+    listen 5000;
 
     access_log /var/log/nginx/%domain%.access.log ;
     error_log /var/log/nginx/%domain%.error.log;
