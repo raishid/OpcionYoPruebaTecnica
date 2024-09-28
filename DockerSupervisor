@@ -13,6 +13,7 @@ libxml2-dev \
 zip \
 unzip \
 wget \
+libzip-dev \
 supervisor
 
 RUN docker-php-ext-install -j$(nproc) \
