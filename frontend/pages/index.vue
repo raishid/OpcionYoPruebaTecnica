@@ -246,6 +246,17 @@ const searchAvalaiblesOnTime = async () => {
     pending.value = false;
     return;
   }
+  data.value.map((doc) => {
+    if (doc.avalaible_hour) {
+      doc.parseAvalaibleHoraries = [
+        {
+          hour: doc.avalaible_hour as string,
+          avalaible: true,
+        },
+      ];
+    }
+    return doc;
+  });
   doctors.value = data.value;
   pending.value = false;
   dateSearch.value = date2.value;

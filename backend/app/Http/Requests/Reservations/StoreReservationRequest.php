@@ -24,7 +24,7 @@ class StoreReservationRequest extends FormRequest
         return [
             'employee_id'   => ['required', 'exists:employees,id'],
             'date'          => ['required', 'date_format:Y-m-d'],
-            'time'          => ['required', 'date'],
+            'time'          => ['required', 'date_format:H:i'],
             'timezone'      => ['required', 'timezone'],
         ];
     }

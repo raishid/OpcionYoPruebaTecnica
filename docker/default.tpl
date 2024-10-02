@@ -40,12 +40,12 @@ server {
     }
 
     location ~ \.php$ {
-        fastcgi_cache dwchiang;
-        fastcgi_cache_valid 200 204 60m;
+        #fastcgi_cache dwchiang;
+        #fastcgi_cache_valid 200 204 60;
         fastcgi_ignore_headers Cache-Control;
         fastcgi_no_cache $skip_cache $http_authorization $cookie_laravel_session;
-        fastcgi_cache_lock on;
-        fastcgi_cache_lock_timeout 10s;
+        #fastcgi_cache_lock on;
+        #fastcgi_cache_lock_timeout 10s;
         fastcgi_buffer_size 6144;
 
         add_header X-Proxy-Cache $upstream_cache_status;

@@ -1,5 +1,5 @@
 export interface DoctorsAvailableData {
-  avalable_horaries: string[] | string;
+  avalable_horaries: string[];
   email: string;
   fullname: string;
   id: string;
@@ -7,6 +7,7 @@ export interface DoctorsAvailableData {
   speciality: string;
   time_zone: string;
   parseAvalaibleHoraries?: { hour: string; avalaible: boolean }[];
+  avalaible_hour?: string;
 }
 
 export interface storeDoctorData {
