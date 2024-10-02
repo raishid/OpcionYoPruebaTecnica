@@ -10,14 +10,14 @@ class Helpers
 
   public static function getRandomAvailableTime(Employee $employee, Carbon $date)
   {
-    $start = Carbon::parse($employee->horary->start);
-    $end = Carbon::parse($employee->horary->end);
-    $lunchStart = Carbon::parse($employee->horary->lunch_start);
-    $lunchEnd = Carbon::parse($employee->horary->lunch_end);
+    $start = Carbon::parse($employee->horary->start, $date->timezone);
+    $end = Carbon::parse($employee->horary->end, $date->timezone);
+    $lunchStart = Carbon::parse($employee->horary->lunch_start, $date->timezone);
+    $lunchEnd = Carbon::parse($employee->horary->lunch_end, $date->timezone);
     $days = $employee->horary->days;
 
     do {
-      $randomTime = Carbon::createFromTimestamp(rand($start->timestamp, $end->timestamp));
+      $randomTime = Carbon::createFromTimestamp(rand($start->timestamp, $end->timestamp), $date->timezone);
       $randomTime->minute = 0;
       $randomTime->second = 0;
       $nameDay = $randomTime->format('l');

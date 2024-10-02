@@ -14,24 +14,27 @@ class EmployeeServices
   /*
   @param Collection<int, \App\Models\Employee> $employees
   */
-  public function mapAvalaibleHour(Collection $employees, Carbon $time_request)
+  public function mapAvalaibleHour(Carbon $time_request)
   {
-    $time_request = $time_request->setMinute(0)->setSecond(0);
-    $tagetHour = Carbon::parse($time_request->format('H:i'));
+    $employees_no_reservation = Employee::with('horary')->whereNotExists(function ($query) use ($time_request) {
+      $query->select('id')->from('reservations')->whereColumn('reservations.employee_id', 'employees.id')->where('reservations.date', $time_request->format('Y-m-d H:i:s'));
+    })->get();
 
-    $employees = $employees->map(function (Employee $employee) use ($tagetHour, $time_request) {
-      $start = Carbon::parse($employee->horary->start);
-      $end = Carbon::parse($employee->horary->end);
+
+    $employees = $employees_no_reservation->filter(function ($employee) use ($time_request) {
+      $hour_request = Carbon::parse($time_request->format('H:i'));
+      $hour_start = Carbon::parse($employee->horary->start);
+      $hour_end = Carbon::parse($employee->horary->end);
       $lunch_start = Carbon::parse($employee->horary->lunch_start);
       $lunch_end = Carbon::parse($employee->horary->lunch_end);
 
-      if ($tagetHour->between($start, $end) && !$tagetHour->between($lunch_start, $lunch_end) && $employee->reservations()->where('date', $time_request->format('Y-m-d H:i:s'))->get()->isEmpty()) {
-        $employee->avalable_horaries = $tagetHour->toAtomString();
-        return EmployeAvalaibleResource::make($employee);
+      if ($hour_request->between($hour_start, $hour_end) && !$hour_request->between($lunch_start, $lunch_end)) {
+        $employee->avalaible_hour = $hour_request->format('H:i');
+        return true;
       }
     });
 
-    $employees = array_values(array_filter($employees->toArray()));
+    $employees = EmployeAvalaibleResource::collection($employees);
 
     return $employees;
   }

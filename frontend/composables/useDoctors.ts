@@ -19,6 +19,26 @@ export const useGetDoctos = async (start_time: string, end_time: string) => {
   );
 };
 
+export const useAsyncGetDoctors = async (
+  start_time: string,
+  end_time: string
+) => {
+  const {
+    public: { apiUrl },
+  } = useRuntimeConfig();
+  return useAsyncData<DoctorsAvailableData[]>("_doctors", async () => {
+    return await $fetch(`${apiUrl}/employe-avalaible-horaries`, {
+      headers: {
+        accept: "application/json",
+      },
+      params: {
+        start_time: start_time,
+        end_time: end_time,
+      },
+    });
+  });
+};
+
 export const useGetDoctorTime = (date: Date) => {
   const timestamp = getUnixTime(date);
   const {

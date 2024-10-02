@@ -2,10 +2,18 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "@samk-dev/nuxt-vcalendar"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "@samk-dev/nuxt-vcalendar",
+    "nuxt-delay-hydration",
+  ],
   tailwindcss: {
     configPath: "~/tailwind.config.ts",
     viewer: false,
+  },
+  delayHydration: {
+    mode: "init",
+    debug: false,
   },
 
   runtimeConfig: {

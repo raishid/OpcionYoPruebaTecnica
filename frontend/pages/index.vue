@@ -187,11 +187,14 @@ const today = new Date();
 
 const todayFormated = format(today, "yyyy-MM-dd");
 
+await nextTick();
+const { data } = await useAsyncGetDoctors(todayFormated, todayFormated);
+
 const pending = ref(false);
 
 const doctors = ref([] as DoctorsAvailableData[]);
 
-const { data } = await useGetDoctos(todayFormated, todayFormated);
+const dateSearch = ref() as Ref<Date>;
 
 const date = ref(today);
 const date2 = ref(today);
@@ -205,14 +208,10 @@ const rules = ref({
   },
 });
 
-const dateSearch = ref() as Ref<Date>;
-
-onMounted(async () => {
-  if (data.value) {
-    doctors.value = mapAvalaibleDay(data.value, date.value);
-    dateSearch.value = date.value;
-  }
-});
+if (data.value) {
+  doctors.value = mapAvalaibleDay(data.value, date.value);
+  dateSearch.value = date.value;
+}
 
 const _clientTimeZone = clientTimeZone();
 
